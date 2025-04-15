@@ -4,6 +4,7 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -12,8 +13,30 @@ builder.Services.AddSwaggerGen();
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("Secrets.json");
 
 var mongoClient = new MongoClient(builder.Configuration.GetConnectionString("CommBank"));
-var mongoDatabase = mongoClient.GetDatabase("CommBank");
+var mongoDatabase = mongoClient.GetDatabase("rServer");
+/*
+try
+{
+    var collections = mongoDatabase.ListCollectionNames().ToList();
 
+    if (collections.Count > 0)
+    {
+        Console.WriteLine("MongoDB connected successfully. Collections found:");
+        foreach (var collection in collections)
+        {
+            Console.WriteLine(collection);
+        }
+    }
+    else
+    {
+        Console.WriteLine("MongoDB connected, but no collections found.");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"MongoDB connection failed: {ex.Message}");
+}
+*/
 IAccountsService accountsService = new AccountsService(mongoDatabase);
 IAuthService authService = new AuthService(mongoDatabase);
 IGoalsService goalsService = new GoalsService(mongoDatabase);
